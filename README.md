@@ -18,7 +18,7 @@ step-by-step examples that can be run via `ion exec`.
 
 ```bash
 # Install ion
-uv tool install "ion-cli @ git+https://github.com/svd-ai-lab/ion.git"
+pip install ion-cli
 
 # Start ion server on a machine with COMSOL installed
 ion serve
