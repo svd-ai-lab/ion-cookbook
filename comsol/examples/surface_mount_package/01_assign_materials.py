@@ -96,14 +96,6 @@ sel_ic.set("posy", "0")
 sel_ic.set("posz", "-0.1")
 sel_ic.set("r", "0.1")
 
-# Chip boundaries (for results plot)
-sel_chip_bnd = comp.selection().create("sel_chip_bnd", "Ball")
-sel_chip_bnd.set("entitydim", jpype.JInt(2))
-sel_chip_bnd.set("posx", "0")
-sel_chip_bnd.set("posy", "0")
-sel_chip_bnd.set("posz", "-0.05")
-sel_chip_bnd.set("r", "0.8")
-
 # --- 5. Copper — boundary-level for thin layers --------------------------
 # Applied to work plane boundaries (ground plate + interconnect)
 mat5 = comp.material().create("mat5", "Common")
