@@ -71,6 +71,39 @@ mat4.propertyGroup("def").set("thermalconductivity", JS(["130[W/(m*K)]"]))
 mat4.propertyGroup("def").set("density", JS(["2329[kg/m^3]"]))
 mat4.propertyGroup("def").set("heatcapacity", JS(["700[J/(kg*K)]"]))
 
+# --- Boundary selections for physics and plots ----------------------------
+# Voltage regulator: end face of board at x = -10
+sel_vr = comp.selection().create("sel_vr", "Ball")
+sel_vr.set("entitydim", jpype.JInt(2))
+sel_vr.set("posx", "-10")
+sel_vr.set("posy", "0")
+sel_vr.set("posz", "-1.4")
+sel_vr.set("r", "0.1")
+
+# Ground plate: work plane boundary at z = -0.9
+sel_gp = comp.selection().create("sel_gp", "Ball")
+sel_gp.set("entitydim", jpype.JInt(2))
+sel_gp.set("posx", "0")
+sel_gp.set("posy", "0")
+sel_gp.set("posz", "-0.9")
+sel_gp.set("r", "0.1")
+
+# Interconnect trace: work plane boundary at z = -0.1
+sel_ic = comp.selection().create("sel_ic", "Ball")
+sel_ic.set("entitydim", jpype.JInt(2))
+sel_ic.set("posx", "-2.5")
+sel_ic.set("posy", "0")
+sel_ic.set("posz", "-0.1")
+sel_ic.set("r", "0.1")
+
+# Chip boundaries (for results plot)
+sel_chip_bnd = comp.selection().create("sel_chip_bnd", "Ball")
+sel_chip_bnd.set("entitydim", jpype.JInt(2))
+sel_chip_bnd.set("posx", "0")
+sel_chip_bnd.set("posy", "0")
+sel_chip_bnd.set("posz", "-0.05")
+sel_chip_bnd.set("r", "0.8")
+
 # --- 5. Copper — boundary-level for thin layers --------------------------
 # Applied to work plane boundaries (ground plate + interconnect)
 mat5 = comp.material().create("mat5", "Common")

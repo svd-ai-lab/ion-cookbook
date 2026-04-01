@@ -29,13 +29,18 @@ sl.set("colortable", "HeatCameraLight")
 pg2.run()
 
 # --- Plot 3: Chip surface temperature ------------------------------------
+# Surface plot nodes need explicit entity indices, not named selections
+sel = model.component("comp1").selection("sel_chip_bnd")
+chip_bnds = list(sel.entities(jpype.JInt(2)))
+
 pg3 = res.create("pg3", "PlotGroup3D")
 pg3.label("Temperature (Chip Surface)")
 s3 = pg3.create("surf1", "Surface")
 s3.set("expr", "T")
 s3.set("unit", "degC")
 s3.set("colortable", "HeatCameraLight")
-s3.selection().named("sel_chip_bnd")  # Box selection around chip boundaries
+s3.selection().geom("geom1", jpype.JInt(2))
+s3.selection().set(jpype.JArray(jpype.JInt)(chip_bnds))
 pg3.run()
 
 # Save model
