@@ -7,6 +7,12 @@ step-by-step examples that can be run via `ion exec`.
 
 ## Recipes
 
+### Ansys Fluent
+
+| Path | Description |
+|------|-------------|
+| [`fluent/examples/mixing_elbow/`](fluent/examples/mixing_elbow/) | Mixing elbow CFD tutorial — steady-state RANS with temperature extraction |
+
 ### COMSOL Multiphysics
 
 | Path | Description |
@@ -20,10 +26,17 @@ step-by-step examples that can be run via `ion exec`.
 # Install ion
 pip install ion-cli
 
-# Start ion server on a machine with COMSOL installed
+# Start ion server on a machine with your solver installed
 ion serve
 
-# Connect and run a recipe
+# --- Fluent example ---
+ion connect --solver fluent --mode solver --ui-mode gui --processors 2
+ion exec --file fluent/examples/mixing_elbow/snippets/00_read_case.py
+ion exec --file fluent/examples/mixing_elbow/snippets/03_setup_physics.py
+# ... (see each example's README for the full sequence)
+ion disconnect
+
+# --- COMSOL example ---
 ion connect --solver comsol --ui-mode standalone
 ion exec --file comsol/examples/surface_mount_package/00_create_geometry.py
 ion exec --file comsol/examples/surface_mount_package/01_assign_materials.py
