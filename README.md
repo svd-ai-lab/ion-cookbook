@@ -1,3 +1,7 @@
+> ⚠️ **This repo has been renamed.** ion-cookbook is now **[sim-skills](https://github.com/svd-ai-lab/sim-skills)**. This repository is archived and read-only — all new development happens at [svd-ai-lab/sim-skills](https://github.com/svd-ai-lab/sim-skills).
+
+---
+
 # ion-cookbook
 
 Cookbook examples for [ion](https://github.com/svd-ai-lab/ion) — the physics simulation runtime for AI agents.
