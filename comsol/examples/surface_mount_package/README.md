@@ -13,23 +13,23 @@ cools the exterior surfaces.
 device does not overheat. The ~2 °C difference is due to simplified pin
 geometry (L-shaped blocks vs original bent hexahedrons).
 
-## Running with ion
+## Running with sim
 
 ```bash
-# 1. Start ion serve on win1 via RDP (GUI mode needs interactive session)
+# 1. Start sim serve on the solver host via RDP (GUI mode needs an interactive session)
 # 2. Connect in standalone mode (simpler, no server subprocess)
-ion --host <host> connect --solver comsol --ui-mode standalone
+sim --host <host> connect --solver comsol --ui-mode standalone
 
 # 3. Build model step by step
-ion --host <host> exec --file workflows/surface_mount_package/00_create_geometry.py
-ion --host <host> exec --file workflows/surface_mount_package/01_assign_materials.py
-ion --host <host> exec --file workflows/surface_mount_package/02_setup_physics.py
-ion --host <host> exec --file workflows/surface_mount_package/03_generate_mesh.py
-ion --host <host> exec --file workflows/surface_mount_package/04_solve.py
-ion --host <host> exec --file workflows/surface_mount_package/05_plot_results.py
+sim --host <host> exec --file 00_create_geometry.py
+sim --host <host> exec --file 01_assign_materials.py
+sim --host <host> exec --file 02_setup_physics.py
+sim --host <host> exec --file 03_generate_mesh.py
+sim --host <host> exec --file 04_solve.py
+sim --host <host> exec --file 05_plot_results.py
 
 # 4. Disconnect when done
-ion --host <host> disconnect
+sim --host <host> disconnect
 ```
 
 > **Visual verification:** Standalone mode has no GUI window. The workflow

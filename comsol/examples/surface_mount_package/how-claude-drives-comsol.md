@@ -4,7 +4,7 @@
 
 **Key takeaways:**
 - The agent connects to a **live COMSOL session** — no copy-pasting code into Application Builder
-- It writes Python that calls COMSOL's Java API via JPype, executed in-process through `ion exec`
+- It writes Python that calls COMSOL's Java API via JPype, executed in-process through `sim exec`
 - It **sees the GUI** via desktop screenshots, the same way a human looks at the screen
 - When something fails — a selection misses, a mesh has bad elements, the solver doesn't converge — the agent **reads the error, diagnoses, and retries** in the same session
 - The difference between "AI generates a script" and "AI drives the simulation" is the **closed feedback loop**: execute, observe, adapt
@@ -19,19 +19,19 @@ This post walks through exactly that: reproducing [COMSOL Application Library mo
 
 ## The setup
 
-[ion](https://github.com/svd-ai-lab/ion) is a lightweight runtime that connects AI agents to physics solvers. For COMSOL, it works like this:
+[sim](https://github.com/svd-ai-lab/sim-cli) is a lightweight runtime that connects AI agents to physics solvers. For COMSOL, it works like this:
 
 ```
 ┌─────────────┐        HTTP        ┌─────────────────────────────┐
-│  Claude      │  ───────────────▶  │  ion serve (Windows machine) │
+│  Claude      │  ───────────────▶  │  sim serve (Windows machine) │
 │  (agent)     │  ◀───────────────  │  COMSOL via JPype + Java API │
 └─────────────┘   exec / screenshot └─────────────────────────────┘
 ```
 
 The agent connects to a persistent COMSOL session. It can:
-- **`ion exec`** — send Python code that runs inside the live COMSOL model
-- **`ion screenshot`** — capture the server's desktop to see the COMSOL GUI
-- **`ion inspect`** — query model state (materials, physics nodes, mesh stats)
+- **`sim exec`** — send Python code that runs inside the live COMSOL model
+- **`sim screenshot`** — capture the server's desktop to see the COMSOL GUI
+- **`sim inspect`** — query model state (materials, physics nodes, mesh stats)
 
 No file round-tripping. No restarting COMSOL between steps. The model object stays in memory across all commands.
 
@@ -48,10 +48,10 @@ A silicon chip in a plastic surface-mount package sits on an FR4 circuit board n
 Claude starts a persistent session with the COMSOL GUI visible:
 
 ```bash
-ion connect --solver comsol --ui-mode gui
+sim connect --solver comsol --ui-mode gui
 ```
 
-> **`ion screenshot`** after connect:
+> **`sim screenshot`** after connect:
 >
 > ![COMSOL Desktop — empty model](screenshots/00_connect.png)
 
@@ -61,7 +61,7 @@ COMSOL Desktop opens with a blank model. The agent now has a live handle to it.
 
 ## Step 1: Create geometry
 
-Claude sends `00_create_geometry.py` via `ion exec`. The script builds:
+Claude sends `00_create_geometry.py` via `sim exec`. The script builds:
 - PC board (20 × 10 × 1 mm)
 - Chip package body (9.9 × 3.9 × 0.2 mm)
 - 16 gull-wing pins (L-shaped blocks, 8 per side)
@@ -82,7 +82,7 @@ blk1.label("PC Board")
 geom.run("fin")
 ```
 
-> **`ion screenshot`** after geometry:
+> **`sim screenshot`** after geometry:
 >
 > ![Geometry — board with package and pins](screenshots/01_geometry.png)
 
@@ -113,7 +113,7 @@ mat4.selection().named("sel_chip")
 mat4.propertyGroup("def").set("thermalconductivity", JS(["130[W/(m*K)]"]))
 ```
 
-> **`ion screenshot`** after materials:
+> **`sim screenshot`** after materials:
 >
 > ![Materials assigned — color-coded domains](screenshots/02_materials.png)
 
@@ -138,7 +138,7 @@ hs1.set("Q0", "2e8[W/m^3]")
 
 The script includes a verification loop that prints how many entities each physics feature selected — the agent reads this output to confirm nothing was missed.
 
-> **`ion screenshot`** after physics:
+> **`sim screenshot`** after physics:
 >
 > ![Physics tree — heat transfer nodes](screenshots/03_physics.png)
 
@@ -157,7 +157,7 @@ mesh.run()
 
 The script reports element count and minimum quality. Claude reads these to verify mesh quality before solving.
 
-> **`ion screenshot`** after meshing:
+> **`sim screenshot`** after meshing:
 >
 > ![Tetrahedral mesh — ~8.5k elements](screenshots/04_mesh.png)
 
@@ -175,7 +175,7 @@ model.sol("sol1").createAutoSequence("std1")
 model.sol("sol1").runAll()
 ```
 
-> **`ion screenshot`** after solve:
+> **`sim screenshot`** after solve:
 >
 > ![Solver log — converged](screenshots/05_solve.png)
 
@@ -198,15 +198,15 @@ s1.set("colortable", "HeatCameraLight")
 pg1.run()
 ```
 
-> **`ion screenshot`** — surface temperature:
+> **`sim screenshot`** — surface temperature:
 >
 > ![Surface temperature plot — HeatCameraLight colormap](screenshots/06_result_surface.png)
 
-> **`ion screenshot`** — temperature slices:
+> **`sim screenshot`** — temperature slices:
 >
 > ![ZX slice plot showing internal temperature distribution](screenshots/07_result_slices.png)
 
-> **`ion screenshot`** — chip surface:
+> **`sim screenshot`** — chip surface:
 >
 > ![Chip bottom surface temperature detail](screenshots/08_result_chip.png)
 
@@ -220,9 +220,9 @@ Every step above follows the same pattern:
 
 1. Claude decides what to do next (e.g., "create geometry")
 2. Claude writes a Python snippet using COMSOL's Java API (via JPype)
-3. `ion exec` sends the snippet to the running COMSOL process
+3. `sim exec` sends the snippet to the running COMSOL process
 4. COMSOL executes it in-process — the model updates live
-5. `ion screenshot` captures the desktop so Claude can see the GUI
+5. `sim screenshot` captures the desktop so Claude can see the GUI
 6. Claude checks the screenshot, decides the next step
 7. If something looks wrong, Claude writes a fix and re-executes
 
@@ -251,4 +251,4 @@ The key insight: **COMSOL's Java API is the automation interface, and JPype make
 
 ---
 
-*Built with [ion](https://github.com/svd-ai-lab/ion) — the physics simulation runtime for AI agents.*
+*Built with [sim](https://github.com/svd-ai-lab/sim-cli) — the physics simulation runtime for AI agents.*

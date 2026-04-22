@@ -1,13 +1,8 @@
-> ⚠️ **This repo has been renamed.** ion-cookbook is now **[sim-skills](https://github.com/svd-ai-lab/sim-skills)**. This repository is archived and read-only — all new development happens at [svd-ai-lab/sim-skills](https://github.com/svd-ai-lab/sim-skills).
+# sim-cookbook
 
----
+End-to-end recipes that reproduce published simulation cases with [sim](https://github.com/svd-ai-lab/sim-cli) — the physics simulation runtime for AI agents.
 
-# ion-cookbook
-
-Cookbook examples for [ion](https://github.com/svd-ai-lab/ion) — the physics simulation runtime for AI agents.
-
-Each recipe includes agent skills (domain knowledge for AI assistants) and
-step-by-step examples that can be run via `ion exec`.
+Each recipe is a runnable, step-by-step workflow: Python snippets staged one per `sim exec`, screenshots of every state, and a short narrative on how an agent drove the solver.
 
 ## Recipes
 
@@ -15,24 +10,25 @@ step-by-step examples that can be run via `ion exec`.
 
 | Path | Description |
 |------|-------------|
-| [`comsol/skills/comsol-ion/`](comsol/skills/comsol-ion/) | Agent skill for driving COMSOL via ion (JPype + Java API) |
-| [`comsol/examples/surface_mount_package/`](comsol/examples/surface_mount_package/) | Heat transfer in a surface-mount IC package (model 847) |
+| [`comsol/examples/surface_mount_package/`](comsol/examples/surface_mount_package/) | Heat transfer in a surface-mount IC package (COMSOL Application Library model 847) |
+
+More recipes (Fluent, Flotherm, MATLAB, OpenFOAM, …) land here as they're written.
 
 ## Quick start
 
 ```bash
-# Install ion
-pip install ion-cli
+# Install sim
+pip install sim-cli
 
-# Start ion server on a machine with COMSOL installed
-ion serve
+# Start the sim server on a machine with the target solver installed
+sim serve
 
 # Connect and run a recipe
-ion connect --solver comsol --ui-mode standalone
-ion exec --file comsol/examples/surface_mount_package/00_create_geometry.py
-ion exec --file comsol/examples/surface_mount_package/01_assign_materials.py
-# ... (see each example's README for the full sequence)
-ion disconnect
+sim connect --solver comsol --ui-mode standalone
+sim exec --file comsol/examples/surface_mount_package/00_create_geometry.py
+sim exec --file comsol/examples/surface_mount_package/01_assign_materials.py
+# ... (see each recipe's README for the full sequence)
+sim disconnect
 ```
 
 ## Adding recipes
@@ -41,13 +37,18 @@ Each solver gets a top-level directory:
 
 ```
 <solver>/
-  skills/         # Agent skills (.claude/skills format)
-  examples/       # Step-by-step workflows
+  examples/       # Step-by-step runnable recipes
   reference/      # API patterns and snippets (optional)
 ```
+
+One recipe per subdirectory under `examples/`, with its own `README.md`, numbered step scripts, and a `screenshots/` folder.
 
 ## Related repos
 
 | Repo | Purpose |
 |------|---------|
-| [ion](https://github.com/svd-ai-lab/ion) | Core CLI, server, and drivers |
+| [sim-cli](https://github.com/svd-ai-lab/sim-cli) | Core CLI, server, and solver drivers |
+| [sim-skills](https://github.com/svd-ai-lab/sim-skills) | Agent skills — protocol/contract knowledge for driving each solver |
+| [sim-datasets](https://github.com/svd-ai-lab/sim-datasets) | Reference mesh, case, and geometry files used by recipes |
+
+This repo complements `sim-skills`: skills teach an agent *how* to drive a solver; the cookbook shows *what* a complete run looks like.
