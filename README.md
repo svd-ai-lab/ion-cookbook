@@ -6,13 +6,25 @@ Each recipe is a runnable, step-by-step workflow: Python snippets staged one per
 
 ## Recipes
 
+### Ansys Fluent
+
+| Path | Description |
+|------|-------------|
+| [`fluent/examples/mixing_elbow/`](fluent/examples/mixing_elbow/) | Steady-state RANS mixing-elbow CFD — reproduces the classic Ansys Fluent tutorial end-to-end via PyFluent |
+
 ### COMSOL Multiphysics
 
 | Path | Description |
 |------|-------------|
 | [`comsol/examples/surface_mount_package/`](comsol/examples/surface_mount_package/) | Heat transfer in a surface-mount IC package (COMSOL Application Library model 847) |
 
-More recipes (Fluent, Flotherm, MATLAB, OpenFOAM, …) land here as they're written.
+### OpenFOAM
+
+| Path | Description |
+|------|-------------|
+| [`openfoam/examples/tutorial_suite/`](openfoam/examples/tutorial_suite/) | Remote OpenFOAM v2206 tutorial suite — 10 cases across incompressible, RANS, VOF, combustion, DNS, driven from a Windows client via `sim serve` over SSH |
+
+More recipes (Flotherm, MATLAB, ANSA, …) land here as they're written.
 
 ## Quick start
 
